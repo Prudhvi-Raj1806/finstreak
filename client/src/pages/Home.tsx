@@ -4,6 +4,7 @@
  * Preserve compact editorial grouping, clear financial hierarchy, soft elevation, and reassuring copy.
  */
 import { useState } from "react";
+import { useLocation } from "wouter";
 import {
   ArrowDownLeft,
   ArrowLeft,
@@ -350,12 +351,17 @@ function BottomDock({ screen, navigate }: { screen: Screen; navigate: (screen: S
 }
 
 export default function Home() {
-  const [screen, setScreen] = useState<Screen>("home");
+  const [location, setLocation] = useLocation();
+  const screenFromPath = (pathname: string): Screen => {
+    const candidate = pathname.replace(/^\//, "") as Screen;
+    return ["home", "transactions", "fin-ai", "insights", "more", "r-streak", "settings"].includes(candidate) ? candidate : "home";
+  };
+  const screen = screenFromPath(location);
   const [previousScreen, setPreviousScreen] = useState<Screen>("home");
   const [toast, setToast] = useState<string | null>(null);
   const [darkMode, setDarkMode] = useState(false);
-  const navigate = (next: Screen) => { if (next !== screen) setPreviousScreen(screen); setScreen(next); };
-  const goBack = () => setScreen(previousScreen);
+  const navigate = (next: Screen) => { if (next !== screen) setPreviousScreen(screen); setLocation(next === "home" ? "/" : `/${next}`); };
+  const goBack = () => navigate(previousScreen);
   const notify = (message: string) => { setToast(message); window.setTimeout(() => setToast(null), 2300); };
   const activeSection = screen === "r-streak" ? "R-Streak" : screen === "settings" ? "Settings" : screen === "fin-ai" ? "Fin AI" : screen === "transactions" ? "Transactions" : screen === "insights" ? "Insights" : screen === "more" ? "More" : "Home";
   return (
@@ -365,7 +371,7 @@ export default function Home() {
         <p className="eyebrow">Interactive visual prototype</p>
         <h2>A personal finance habit, <em>in your pocket.</em></h2>
         <p className="stage-copy">Explore the complete Finella experience as a tactile mobile prototype. Use the bottom navigation, cards, toggles, and contextual controls inside the handset.</p>
-        <div className="stage-screen-list">{[["01", "Home", "Money at a glance"], ["02", "R-Streak", "Daily consistency"], ["03", "Fin AI", "Coaching prompts"], ["04", "Insights", "Decide with clarity"]].map(([number, title, sub]) => <button key={number} onClick={() => navigate(title === "R-Streak" ? "r-streak" : title === "Fin AI" ? "fin-ai" : title.toLowerCase() as Screen)}><span>{number}</span><b>{title}</b><small>{sub}</small></button>)}</div>
+        <div className="stage-screen-list">{[["01", "Home", "Money at a glance", "home"], ["02", "Transactions", "Every movement", "transactions"], ["03", "R-Streak", "Daily consistency", "r-streak"], ["04", "Fin AI", "Coaching prompts", "fin-ai"], ["05", "Insights", "Decide with clarity", "insights"], ["06", "More", "Your toolkit", "more"], ["07", "Settings", "Personalize Finella", "settings"]].map(([number, title, sub, screenId]) => <button key={number} className={screen === screenId ? "active" : ""} onClick={() => navigate(screenId as Screen)}><span>{number}</span><b>{title}</b><small>{sub}</small></button>)}</div>
         <div className="stage-hint"><span>⌘</span> Click through the app<br />to preview its interactions.</div>
       </aside>
       <section className="device-scene" aria-label="Finella mobile app emulator">

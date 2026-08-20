@@ -6,5 +6,5 @@
 - [x] Add a rewrite so direct app routes resolve to the SPA entry point.
 - [x] Validate the Vercel production build and route fallback behavior.
 - [x] Confirm the connected repository remote and target branch.
-- [ ] Commit the Vercel-ready revision and push it to the configured remote.
-- [ ] Verify the remote contains the pushed revision.
+- [x] Commit the Vercel-ready revision and push it to the configured remote.
+- [x] Verify the remote contains the pushed revision.

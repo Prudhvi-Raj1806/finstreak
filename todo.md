@@ -11,3 +11,7 @@
 - [x] Remove the desktop context panel and retain only the device emulator.
 - [x] Update the handset shell to a Samsung Galaxy A16 5G-inspired 19.5:9 proportion and centered desktop scaling.
 - [x] Retune in-app component sizing for the taller Samsung-style viewport and verify desktop and mobile layouts.
+- [x] Add distinct un-categorised and categorised transaction sections.
+- [x] Add interactive Sort and Filter controls for the transaction list.
+- [x] Validate the updated Transactions screen at desktop and mobile sizes.
+- [ ] Build and sync the production-ready revision to the GitHub review branch.

@@ -15,3 +15,7 @@ The stacked category groups have been replaced by a one-row, two-column segmente
 ## Home and asset-detail verification
 
 Home now displays the green circular profile identifier and a dedicated Settings control in the header. The R-Streak calendar shows numeric dates from 1 to 31, and the Bank Accounts tile opens a standalone connected-accounts detail view with a return control. Home, R-Streak, and Bank Accounts were reviewed in the Samsung-style desktop emulator and at 390×844; the controls and date labels remain legible in both contexts.
+
+## Transaction management verification
+
+Transactions now presents prominent side-by-side Uncategorised and Categorised cards directly below the title. Sort and Filter are persistently visible beneath those cards, and the selected list retains tap targets for a transaction detail sheet with edit and delete actions. The header and in-card Add actions open a transaction form that adds a new record to the selected category flow. The layout was reviewed in the centered desktop emulator and at 390×844 without overflow or truncated control labels.

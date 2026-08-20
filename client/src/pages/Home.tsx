@@ -47,7 +47,9 @@ import {
   Sparkles,
   Target,
   TrendingUp,
+  Trash2,
   WalletCards,
+  X,
   type LucideIcon,
 } from "lucide-react";
 
@@ -242,60 +244,44 @@ function RStreakScreen({ goBack, notify }: { goBack: () => void; notify: (messag
 }
 
 function TransactionsScreen({ goBack, notify }: { goBack: () => void; notify: (message: string) => void }) {
-  type TransactionRecord = { date: string; icon: LucideIcon; title: string; category: string; amount: string; amountValue: number; tone: "green" | "mint" | "gold" | "lilac" | "blue"; categorised: boolean };
+  type TransactionRecord = { id: string; date: string; icon: LucideIcon; title: string; category: string; amount: string; amountValue: number; tone: "green" | "mint" | "gold" | "coral" | "lilac" | "blue"; categorised: boolean };
   const [filter, setFilter] = useState<"All" | "Income" | "Expenses">("All");
   const [amountFilter, setAmountFilter] = useState<"All" | "Large" | "Small">("All");
   const [activeGroup, setActiveGroup] = useState<"Uncategorised" | "Categorised">("Uncategorised");
   const [sort, setSort] = useState<"Newest" | "Highest">("Newest");
   const [showSortMenu, setShowSortMenu] = useState(false);
   const [showFilterMenu, setShowFilterMenu] = useState(false);
-  const transactions: TransactionRecord[] = [
-    { date: "Today", icon: ArrowDownLeft, title: "Salary", category: "Income · HDFC Bank", amount: "+₹45,000", amountValue: 45000, tone: "mint", categorised: true },
-    { date: "Today", icon: ShoppingBag, title: "Swiggy", category: "Food & Dining", amount: "-₹420", amountValue: 420, tone: "gold", categorised: true },
-    { date: "Yesterday", icon: ShoppingBag, title: "Amazon", category: "Shopping", amount: "-₹1,299", amountValue: 1299, tone: "lilac", categorised: true },
-    { date: "Aug 16", icon: Banknote, title: "Starbucks", category: "Food & Dining", amount: "-₹250", amountValue: 250, tone: "green", categorised: true },
-    { date: "Aug 15", icon: ReceiptText, title: "Netflix", category: "Entertainment", amount: "-₹649", amountValue: 649, tone: "blue", categorised: true },
-    { date: "Aug 15", icon: Landmark, title: "Rent", category: "Housing", amount: "-₹18,000", amountValue: 18000, tone: "mint", categorised: true },
-    { date: "Aug 14", icon: WalletCards, title: "UPI transfer", category: "Needs review", amount: "-₹1,200", amountValue: 1200, tone: "coral" as "green" | "mint" | "gold" | "lilac" | "blue", categorised: false },
-    { date: "Aug 13", icon: ReceiptText, title: "Metro Card", category: "Needs review", amount: "-₹550", amountValue: 550, tone: "blue", categorised: false },
-    { date: "Aug 13", icon: MoreHorizontal, title: "Merchant payment", category: "Needs review", amount: "-₹890", amountValue: 890, tone: "lilac", categorised: false },
-  ];
-  const visibleTransactions = transactions
-    .filter((entry) => filter === "All" || (filter === "Income" ? entry.amount.startsWith("+") : entry.amount.startsWith("-")))
-    .filter((entry) => amountFilter === "All" || (amountFilter === "Large" ? entry.amountValue >= 1000 : entry.amountValue < 1000))
-    .sort((a, b) => sort === "Highest" ? b.amountValue - a.amountValue : 0);
+  const [selectedTransaction, setSelectedTransaction] = useState<TransactionRecord | null>(null);
+  const [showAddSheet, setShowAddSheet] = useState(false);
+  const [draftTitle, setDraftTitle] = useState("");
+  const [draftAmount, setDraftAmount] = useState("");
+  const [draftCategory, setDraftCategory] = useState("Uncategorised");
+  const [transactions, setTransactions] = useState<TransactionRecord[]>(() => [
+    { id: "salary", date: "Today", icon: ArrowDownLeft, title: "Salary", category: "Income · HDFC Bank", amount: "+₹45,000", amountValue: 45000, tone: "mint", categorised: true },
+    { id: "swiggy", date: "Today", icon: ShoppingBag, title: "Swiggy", category: "Food & Dining", amount: "-₹420", amountValue: 420, tone: "gold", categorised: true },
+    { id: "amazon", date: "Yesterday", icon: ShoppingBag, title: "Amazon", category: "Shopping", amount: "-₹1,299", amountValue: 1299, tone: "lilac", categorised: true },
+    { id: "starbucks", date: "Aug 16", icon: Banknote, title: "Starbucks", category: "Food & Dining", amount: "-₹250", amountValue: 250, tone: "green", categorised: true },
+    { id: "netflix", date: "Aug 15", icon: ReceiptText, title: "Netflix", category: "Entertainment", amount: "-₹649", amountValue: 649, tone: "blue", categorised: true },
+    { id: "rent", date: "Aug 15", icon: Landmark, title: "Rent", category: "Housing", amount: "-₹18,000", amountValue: 18000, tone: "mint", categorised: true },
+    { id: "upi", date: "Aug 14", icon: WalletCards, title: "UPI transfer", category: "Needs review", amount: "-₹1,200", amountValue: 1200, tone: "coral", categorised: false },
+    { id: "metro", date: "Aug 13", icon: ReceiptText, title: "Metro Card", category: "Needs review", amount: "-₹550", amountValue: 550, tone: "blue", categorised: false },
+    { id: "merchant", date: "Aug 13", icon: MoreHorizontal, title: "Merchant payment", category: "Needs review", amount: "-₹890", amountValue: 890, tone: "lilac", categorised: false },
+  ]);
+  const visibleTransactions = transactions.filter((entry) => filter === "All" || (filter === "Income" ? entry.amount.startsWith("+") : entry.amount.startsWith("-"))).filter((entry) => amountFilter === "All" || (amountFilter === "Large" ? entry.amountValue >= 1000 : entry.amountValue < 1000)).sort((a, b) => sort === "Highest" ? b.amountValue - a.amountValue : 0);
   const uncategorisedTransactions = visibleTransactions.filter((entry) => !entry.categorised);
   const categorisedTransactions = visibleTransactions.filter((entry) => entry.categorised);
   const activeTransactions = activeGroup === "Uncategorised" ? uncategorisedTransactions : categorisedTransactions;
-  const renderTransaction = (entry: TransactionRecord) => <button className="full-transaction" key={`${entry.date}-${entry.title}`} onClick={() => notify(entry.categorised ? `${entry.title} transaction details opened` : `${entry.title} is ready to categorise`)}><span className="transaction-date">{entry.date}</span><MiniIcon icon={entry.icon} tone={entry.tone} /><span className="transaction-name"><b>{entry.title}</b><small>{entry.category}</small></span><strong className={entry.amount.startsWith("+") ? "positive" : ""}>{entry.amount}</strong><ChevronRight size={16} /></button>;
-  return (
-    <>
-      <AppHeader title="Transactions" subtitle="Track every move with clarity." onBack={goBack} right={<button className="round-control" onClick={() => notify("Add transaction entry opened")}><Plus size={22} /></button>} />
-      <div className="app-scroll transaction-screen">
-        <div className="balance-strip"><span>Available to spend</span><b>₹11,550</b><small><TrendingUp size={13} /> ₹2,120 more than last week</small></div>
-        <div className="filter-row">{(["All", "Income", "Expenses"] as const).map((item) => <button className={filter === item ? "active" : ""} onClick={() => setFilter(item)} key={item}>{item}</button>)}<button className="filter-more" onClick={() => notify("Date range selector opened")}><CalendarDays size={16} /> Aug 2026 <ChevronDown size={14} /></button></div>
-        <div className="transaction-tools">
-          <div className="transaction-tool-wrap"><button className={`tool-chip ${showSortMenu ? "selected" : ""}`} onClick={() => { setShowSortMenu(!showSortMenu); setShowFilterMenu(false); }}><ArrowDownUp size={14} /> Sort: {sort}<ChevronDown size={13} /></button>{showSortMenu ? <div className="tool-menu"><button className={sort === "Newest" ? "active" : ""} onClick={() => { setSort("Newest"); setShowSortMenu(false); }}>Newest first</button><button className={sort === "Highest" ? "active" : ""} onClick={() => { setSort("Highest"); setShowSortMenu(false); }}>Highest amount</button></div> : null}</div>
-          <div className="transaction-tool-wrap"><button className={`tool-chip ${showFilterMenu ? "selected" : ""}`} onClick={() => { setShowFilterMenu(!showFilterMenu); setShowSortMenu(false); }}><SlidersHorizontal size={14} /> Filter: {amountFilter}<ChevronDown size={13} /></button>{showFilterMenu ? <div className="tool-menu filter-menu">{(["All", "Large", "Small"] as const).map((option) => <button className={amountFilter === option ? "active" : ""} key={option} onClick={() => { setAmountFilter(option); setShowFilterMenu(false); }}>{option === "All" ? "All amounts" : option === "Large" ? "Over ₹1,000" : "Under ₹1,000"}</button>)}</div> : null}</div>
-          <span>{visibleTransactions.length} results</span>
-        </div>
-        <section className="transaction-list card">
-          <div className="list-header"><h2>Transactions</h2><button className="text-link" onClick={() => notify("Transaction search activated")}>Search</button></div>
-          <div className="transaction-segments" role="tablist" aria-label="Transaction type">
-            <button className={activeGroup === "Uncategorised" ? "active" : ""} onClick={() => setActiveGroup("Uncategorised")} role="tab" aria-selected={activeGroup === "Uncategorised"}><span>Uncategorised</span><b>{uncategorisedTransactions.length}</b></button>
-            <button className={activeGroup === "Categorised" ? "active" : ""} onClick={() => setActiveGroup("Categorised")} role="tab" aria-selected={activeGroup === "Categorised"}><span>Categorised</span><b>{categorisedTransactions.length}</b></button>
-          </div>
-          <div className="transaction-tab-panel" role="tabpanel">
-            {activeGroup === "Uncategorised" && activeTransactions.length ? <div className="tab-panel-note"><span><b>Needs a category</b><small>Review these to keep your insights accurate.</small></span><button onClick={() => notify("Bulk categorisation opened")}>Categorise all</button></div> : null}
-            {activeGroup === "Categorised" && activeTransactions.length ? <div className="tab-panel-note categorised-note"><span><b>Organised activity</b><small>Transactions already assigned to a category.</small></span><Check size={16} /></div> : null}
-            {activeTransactions.map(renderTransaction)}
-            {!activeTransactions.length ? <div className="transaction-empty"><SlidersHorizontal size={19} /><b>No {activeGroup.toLowerCase()} transactions</b><small>Try a different filter to see more activity.</small></div> : null}
-          </div>
-        </section>
-        <button className="transaction-insight" onClick={() => notify("Insight saved to your Fin AI feed")}><Lightbulb size={20} /><span><b>You spent ₹3,040 more this month.</b><small>See the three categories driving the change.</small></span><ChevronRight size={18} /></button>
-      </div>
-    </>
-  );
+  const addTransaction = () => {
+    const amountValue = Number(draftAmount.replace(/[^0-9.]/g, ""));
+    if (!draftTitle.trim() || !amountValue) { notify("Add a merchant and amount to continue"); return; }
+    const categorised = draftCategory !== "Uncategorised";
+    setTransactions((current) => [{ id: `manual-${Date.now()}`, date: "Today", icon: ReceiptText, title: draftTitle.trim(), category: categorised ? draftCategory : "Needs review", amount: `-₹${amountValue.toLocaleString("en-IN")}`, amountValue, tone: categorised ? "green" : "gold", categorised }, ...current]);
+    setActiveGroup(categorised ? "Categorised" : "Uncategorised");
+    setDraftTitle(""); setDraftAmount(""); setDraftCategory("Uncategorised"); setShowAddSheet(false); notify("Transaction added");
+  };
+  const deleteTransaction = (id: string, title: string) => { setTransactions((current) => current.filter((entry) => entry.id !== id)); setSelectedTransaction(null); notify(`${title} deleted`); };
+  const renderTransaction = (entry: TransactionRecord) => <button className="full-transaction" key={entry.id} onClick={() => setSelectedTransaction(entry)}><span className="transaction-date">{entry.date}</span><MiniIcon icon={entry.icon} tone={entry.tone} /><span className="transaction-name"><b>{entry.title}</b><small>{entry.category}</small></span><strong className={entry.amount.startsWith("+") ? "positive" : ""}>{entry.amount}</strong><ChevronRight size={16} /></button>;
+  return <><AppHeader title="Transactions" subtitle="Track every move with clarity." onBack={goBack} right={<button className="round-control" aria-label="Add transaction" onClick={() => setShowAddSheet(true)}><Plus size={22} /></button>} /><div className="app-scroll transaction-screen"><div className="balance-strip"><span>Available to spend</span><b>₹11,550</b><small><TrendingUp size={13} /> ₹2,120 more than last week</small></div><div className="filter-row">{(["All", "Income", "Expenses"] as const).map((item) => <button className={filter === item ? "active" : ""} onClick={() => setFilter(item)} key={item}>{item}</button>)}<button className="filter-more" onClick={() => notify("Date range selector opened")}><CalendarDays size={16} /> Aug 2026 <ChevronDown size={14} /></button></div><section className="transaction-list card"><div className="list-header"><h2>Transactions</h2><button className="text-link" onClick={() => setShowAddSheet(true)}>Add <Plus size={14} /></button></div><div className="transaction-category-row" role="tablist" aria-label="Transaction category"><button className={`transaction-category-card uncat ${activeGroup === "Uncategorised" ? "active" : ""}`} onClick={() => setActiveGroup("Uncategorised")} role="tab" aria-selected={activeGroup === "Uncategorised"}><span><ReceiptText size={17} /><b>Uncategorised</b></span><strong>{uncategorisedTransactions.length}</strong><small>Needs review</small></button><button className={`transaction-category-card cat ${activeGroup === "Categorised" ? "active" : ""}`} onClick={() => setActiveGroup("Categorised")} role="tab" aria-selected={activeGroup === "Categorised"}><span><Check size={17} /><b>Categorised</b></span><strong>{categorisedTransactions.length}</strong><small>Organised activity</small></button></div><div className="transaction-tools persistent-tools"><div className="transaction-tool-wrap"><button className={`tool-chip ${showSortMenu ? "selected" : ""}`} onClick={() => { setShowSortMenu(!showSortMenu); setShowFilterMenu(false); }}><ArrowDownUp size={14} /> Sort: {sort}<ChevronDown size={13} /></button>{showSortMenu ? <div className="tool-menu"><button className={sort === "Newest" ? "active" : ""} onClick={() => { setSort("Newest"); setShowSortMenu(false); }}>Newest first</button><button className={sort === "Highest" ? "active" : ""} onClick={() => { setSort("Highest"); setShowSortMenu(false); }}>Highest amount</button></div> : null}</div><div className="transaction-tool-wrap"><button className={`tool-chip ${showFilterMenu ? "selected" : ""}`} onClick={() => { setShowFilterMenu(!showFilterMenu); setShowSortMenu(false); }}><SlidersHorizontal size={14} /> Filter: {amountFilter}<ChevronDown size={13} /></button>{showFilterMenu ? <div className="tool-menu filter-menu">{(["All", "Large", "Small"] as const).map((option) => <button className={amountFilter === option ? "active" : ""} key={option} onClick={() => { setAmountFilter(option); setShowFilterMenu(false); }}>{option === "All" ? "All amounts" : option === "Large" ? "Over ₹1,000" : "Under ₹1,000"}</button>)}</div> : null}</div><span>{activeTransactions.length} shown</span></div><div className="transaction-tab-panel" role="tabpanel">{activeGroup === "Uncategorised" && activeTransactions.length ? <div className="tab-panel-note"><span><b>Review your transactions</b><small>Tap one to categorise, edit, or delete it.</small></span><button onClick={() => notify("Bulk categorisation opened")}>Review all</button></div> : null}{activeGroup === "Categorised" && activeTransactions.length ? <div className="tab-panel-note categorised-note"><span><b>Everything is organised</b><small>Tap any record to view or manage it.</small></span><Check size={16} /></div> : null}{activeTransactions.map(renderTransaction)}{!activeTransactions.length ? <div className="transaction-empty"><SlidersHorizontal size={19} /><b>No {activeGroup.toLowerCase()} transactions</b><small>Try a different filter or add a transaction.</small></div> : null}</div></section><button className="transaction-insight" onClick={() => notify("Insight saved to your Fin AI feed")}><Lightbulb size={20} /><span><b>You spent ₹3,040 more this month.</b><small>See the three categories driving the change.</small></span><ChevronRight size={18} /></button></div>{selectedTransaction ? <div className="transaction-sheet-layer" role="dialog" aria-modal="true" aria-label="Transaction details"><button className="sheet-scrim" aria-label="Close details" onClick={() => setSelectedTransaction(null)} /><section className="transaction-sheet"><button className="sheet-close" aria-label="Close details" onClick={() => setSelectedTransaction(null)}><X size={18} /></button><MiniIcon icon={selectedTransaction.icon} tone={selectedTransaction.tone} /><small>{selectedTransaction.date} · {selectedTransaction.category}</small><h2>{selectedTransaction.title}</h2><strong className={selectedTransaction.amount.startsWith("+") ? "positive" : ""}>{selectedTransaction.amount}</strong><div className="sheet-meta"><span>Account <b>HDFC Bank</b></span><span>Status <b>{selectedTransaction.categorised ? "Categorised" : "Needs review"}</b></span></div><button className="sheet-primary" onClick={() => notify(`${selectedTransaction.title} edit flow opened`)}>Edit transaction</button><button className="sheet-danger" onClick={() => deleteTransaction(selectedTransaction.id, selectedTransaction.title)}><Trash2 size={16} /> Delete transaction</button></section></div> : null}{showAddSheet ? <div className="transaction-sheet-layer" role="dialog" aria-modal="true" aria-label="Add transaction"><button className="sheet-scrim" aria-label="Close add transaction" onClick={() => setShowAddSheet(false)} /><form className="transaction-sheet add-sheet" onSubmit={(event) => { event.preventDefault(); addTransaction(); }}><button className="sheet-close" type="button" aria-label="Close add transaction" onClick={() => setShowAddSheet(false)}><X size={18} /></button><SmallLabel>New transaction</SmallLabel><h2>Add an expense</h2><label>Merchant<input autoFocus value={draftTitle} onChange={(event) => setDraftTitle(event.target.value)} placeholder="e.g. Coffee shop" /></label><label>Amount<input inputMode="decimal" value={draftAmount} onChange={(event) => setDraftAmount(event.target.value)} placeholder="0" /></label><label>Category<select value={draftCategory} onChange={(event) => setDraftCategory(event.target.value)}><option>Uncategorised</option><option>Food & Dining</option><option>Shopping</option><option>Transport</option><option>Entertainment</option></select></label><button className="sheet-primary" type="submit"><Plus size={16} /> Add transaction</button></form></div> : null}</>;
 }
 
 function InsightsScreen({ notify }: { notify: (message: string) => void }) {

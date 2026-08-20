@@ -22,3 +22,7 @@
 - [x] Add numeric day labels to the R-Streak calendar activity display.
 - [x] Add tappable Home asset cards and a Bank Accounts detail screen with return navigation.
 - [x] Verify the Home, R-Streak, and Bank Accounts detail interactions across viewports.
+- [x] Present Categorised and Uncategorised transaction lists side by side in the Transactions view.
+- [x] Make Sort and Filter controls persistently visible and usable.
+- [x] Add transaction detail, create, and delete flows with responsive in-phone controls.
+- [x] Verify the updated Transactions flow at desktop and Samsung-style mobile sizes.

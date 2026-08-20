@@ -15,3 +15,6 @@
 - [x] Add interactive Sort and Filter controls for the transaction list.
 - [x] Validate the updated Transactions screen at desktop and mobile sizes.
 - [x] Build and sync the production-ready revision to the GitHub review branch.
+- [x] Replace stacked transaction groups with a two-column un-categorised/categorised segment control.
+- [x] Show only the selected transaction list while preserving Sort and Filter behavior.
+- [x] Verify the segmented control at desktop and Samsung-style mobile sizes.

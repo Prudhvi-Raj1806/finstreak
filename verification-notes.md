@@ -7,3 +7,7 @@ Mobile review at 390×844 confirms the app remains navigable; however, the inher
 ## Transactions enhancement verification
 
 The updated Transactions screen was reviewed at 1280×860 in the device emulator and at 390×844 on mobile. Both views show a distinct amber un-categorised review section, a separate categorised activity section, a visible Sort control, a Filter control, and the active result count. The controls fit within the narrow mobile composition without truncating labels or obscuring the app’s bottom navigation.
+
+## Transaction selector verification
+
+The stacked category groups have been replaced by a one-row, two-column segmented selector immediately below the Transactions heading. The default Uncategorised segment shows three reviewable records, while the Categorised segment switches to the organised transaction list. The selector, count badges, Sort, and Filter controls remain readable at 1280×860 and 390×844.

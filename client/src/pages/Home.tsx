@@ -1,7 +1,7 @@
 /**
  * DESIGN REMINDER — Calm Financial Companion:
- * This page stages a warm-white, emerald-led personal-finance mobile app inside one physical phone.
- * Preserve compact editorial grouping, clear financial hierarchy, soft elevation, and reassuring copy.
+ * This page stages a warm-white, emerald-led personal-finance app in a device-only Samsung-style emulator.
+ * Preserve compact editorial grouping, clear financial hierarchy, soft elevation, and a tall 19.5:9 screen rhythm.
  */
 import { useState } from "react";
 import { useLocation } from "wouter";
@@ -363,37 +363,29 @@ export default function Home() {
   const navigate = (next: Screen) => { if (next !== screen) setPreviousScreen(screen); setLocation(next === "home" ? "/" : `/${next}`); };
   const goBack = () => navigate(previousScreen);
   const notify = (message: string) => { setToast(message); window.setTimeout(() => setToast(null), 2300); };
-  const activeSection = screen === "r-streak" ? "R-Streak" : screen === "settings" ? "Settings" : screen === "fin-ai" ? "Fin AI" : screen === "transactions" ? "Transactions" : screen === "insights" ? "Insights" : screen === "more" ? "More" : "Home";
   return (
     <main className={`prototype-stage ${darkMode ? "phone-dark" : ""}`}>
-      <aside className="stage-side">
-        <div className="stage-brand"><img src={SPARK_MARK} alt="Finella" /><span>finella</span></div>
-        <p className="eyebrow">Interactive visual prototype</p>
-        <h2>A personal finance habit, <em>in your pocket.</em></h2>
-        <p className="stage-copy">Explore the complete Finella experience as a tactile mobile prototype. Use the bottom navigation, cards, toggles, and contextual controls inside the handset.</p>
-        <div className="stage-screen-list">{[["01", "Home", "Money at a glance", "home"], ["02", "Transactions", "Every movement", "transactions"], ["03", "R-Streak", "Daily consistency", "r-streak"], ["04", "Fin AI", "Coaching prompts", "fin-ai"], ["05", "Insights", "Decide with clarity", "insights"], ["06", "More", "Your toolkit", "more"], ["07", "Settings", "Personalize Finella", "settings"]].map(([number, title, sub, screenId]) => <button key={number} className={screen === screenId ? "active" : ""} onClick={() => navigate(screenId as Screen)}><span>{number}</span><b>{title}</b><small>{sub}</small></button>)}</div>
-        <div className="stage-hint"><span>⌘</span> Click through the app<br />to preview its interactions.</div>
-      </aside>
       <section className="device-scene" aria-label="Finella mobile app emulator">
         <div className="device-shadow" />
         <div className="phone-shell">
-          <div className="phone-top"><span className="phone-time">9:41</span><div className="dynamic-island" /><span className="phone-status"><i /><i /><i /></span></div>
+          <div className="phone-top"><span className="phone-time">9:41</span><div className="camera-notch" /><span className="phone-status"><i /><i /><i /></span></div>
           <div className="phone-screen">
-            <div className="screen-content" key={screen}>
-              {screen === "home" && <HomeScreen navigate={navigate} notify={notify} />}
-              {screen === "r-streak" && <RStreakScreen goBack={goBack} notify={notify} />}
-              {screen === "transactions" && <TransactionsScreen goBack={goBack} notify={notify} />}
-              {screen === "insights" && <InsightsScreen notify={notify} />}
-              {screen === "more" && <MoreScreen navigate={navigate} notify={notify} />}
-              {screen === "settings" && <SettingsScreen goBack={goBack} darkMode={darkMode} setDarkMode={setDarkMode} notify={notify} />}
-              {screen === "fin-ai" && <FinAIScreen notify={notify} />}
+            <div className="phone-ui-scale">
+              <div className="screen-content" key={screen}>
+                {screen === "home" && <HomeScreen navigate={navigate} notify={notify} />}
+                {screen === "r-streak" && <RStreakScreen goBack={goBack} notify={notify} />}
+                {screen === "transactions" && <TransactionsScreen goBack={goBack} notify={notify} />}
+                {screen === "insights" && <InsightsScreen notify={notify} />}
+                {screen === "more" && <MoreScreen navigate={navigate} notify={notify} />}
+                {screen === "settings" && <SettingsScreen goBack={goBack} darkMode={darkMode} setDarkMode={setDarkMode} notify={notify} />}
+                {screen === "fin-ai" && <FinAIScreen notify={notify} />}
+              </div>
+              {screen !== "r-streak" && screen !== "settings" ? <BottomDock screen={screen} navigate={navigate} /> : null}
+              {toast ? <div className="prototype-toast"><Check size={15} /> {toast}</div> : null}
             </div>
-            {screen !== "r-streak" && screen !== "settings" ? <BottomDock screen={screen} navigate={navigate} /> : null}
-            {toast ? <div className="prototype-toast"><Check size={15} /> {toast}</div> : null}
           </div>
           <div className="phone-home-indicator" />
         </div>
-        <div className="scene-caption"><span>Now previewing</span><b>{activeSection}</b><i /> Tap any interactive element</div>
       </section>
     </main>
   );

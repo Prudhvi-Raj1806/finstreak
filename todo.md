@@ -8,3 +8,6 @@
 - [x] Confirm the connected repository remote and target branch.
 - [x] Commit the Vercel-ready revision and push it to the configured remote.
 - [x] Verify the remote contains the pushed revision.
+- [x] Remove the desktop context panel and retain only the device emulator.
+- [x] Update the handset shell to a Samsung Galaxy A16 5G-inspired 19.5:9 proportion and centered desktop scaling.
+- [x] Retune in-app component sizing for the taller Samsung-style viewport and verify desktop and mobile layouts.

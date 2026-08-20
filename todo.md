@@ -34,3 +34,5 @@
 - [x] Reproduce the reported back-navigation loop across primary and nested Finella screens.
 - [x] Replace history-dependent in-phone back behavior with deterministic screen return behavior.
 - [x] Verify corrected back navigation on representative desktop and Samsung-style mobile flows.
+- [x] Locate and remove the Home-screen nested-button hierarchy reported by React.
+- [x] Validate that the DOM-nesting warning is absent after the accessibility-safe refactor.

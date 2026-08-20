@@ -64,3 +64,10 @@ A four-spark geometric compass in a deep forest green represents multiple financ
 ### Signature Brand Color
 
 **Finella Forest — `#075C2A`**
+
+## Style Decisions
+
+- The four-spark compass mark is a recurring primary signature, appearing in every screen header as well as the raised Fin AI dock key and FinScore/AI moments.
+- Deep forest is reserved for confidence states, active navigation, Fin AI, and decisive primary actions. Routine financial information relies on warm white, parchment, pale mint, and restrained elevation.
+- Secondary screens are intentionally layered views: the back affordance, persistent spark signature, and global quick-add control retain continuity with the primary dock rather than duplicating a dock in every detail flow.
+- Fin AI is a calm, evidence-led financial coach. Its visual language prioritizes the compass spark, mint coaching surfaces, and wealth-signal copy over a mascot-led chatbot treatment.

@@ -26,3 +26,8 @@
 - [x] Make Sort and Filter controls persistently visible and usable.
 - [x] Add transaction detail, create, and delete flows with responsive in-phone controls.
 - [x] Verify the updated Transactions flow at desktop and Samsung-style mobile sizes.
+- [x] Extract the documented feature, screen, score, and reconciliation requirements from all supplied documents.
+- [x] Create an implementation inventory for missing Finella screens and every interactive control.
+- [x] Build the missing screens and connect all documented navigation, modal, dropdown, and management flows.
+- [x] Confirm numeric dates render in both Home and R-Streak activity views.
+- [x] Validate every in-app control through a complete desktop and mobile interaction pass.

@@ -58,7 +58,15 @@ type Screen =
   | "insights"
   | "more"
   | "r-streak"
-  | "settings";
+  | "settings"
+  | "bank-accounts"
+  | "investments"
+  | "cash"
+  | "credit-cards"
+  | "loans";
+
+type AssetScreen = "bank-accounts" | "investments" | "cash" | "credit-cards" | "loans";
+const assetScreenIds: AssetScreen[] = ["bank-accounts", "investments", "cash", "credit-cards", "loans"];
 
 const AI_COACH = "https://files.manuscdn.com/user_upload_by_module/session_file/310519663805166564/ohgfOiQaHzMiADoL.png";
 const FOREST_TEXTURE = "https://files.manuscdn.com/user_upload_by_module/session_file/310519663805166564/CbrODAxVKcgQJvdU.png";
@@ -148,11 +156,12 @@ function FinScoreCard({ onDetails }: { onDetails: () => void }) {
 
 function HomeScreen({ navigate, notify }: { navigate: (screen: Screen) => void; notify: (message: string) => void }) {
   const [activityExpanded, setActivityExpanded] = useState(false);
+  const homeAssets: Array<[LucideIcon, string, string, "green" | "mint" | "gold" | "coral", AssetScreen]> = [[Landmark, "Bank Accounts", "2,85,000", "green", "bank-accounts"], [LineChart, "Investments", "48,500", "mint", "investments"], [WalletCards, "Cash", "12,000", "gold", "cash"], [WalletCards, "Credit Cards", "-18,500", "coral", "credit-cards"], [CircleUserRound, "Loans", "-18,000", "coral", "loans"]];
   return (
     <>
       <AppHeader
-        title={<><span className="greeting">Welcome back,</span><br />Prudhvi <ChevronDown size={18} className="title-chevron" /></>}
-        right={<><button className="round-control notification-dot" aria-label="Notifications"><Bell size={20} /></button><button className="round-control" aria-label="Add transaction" onClick={() => notify("New transaction entry opened") }><Plus size={22} /></button></>}
+        title={<span className="home-title"><span className="home-profile-avatar" aria-hidden="true">P</span><span><span className="greeting">Welcome back,</span><br />Prudhvi <ChevronDown size={18} className="title-chevron" /></span></span>}
+        right={<><button className="round-control notification-dot" aria-label="Notifications"><Bell size={20} /></button><button className="round-control" aria-label="Add transaction" onClick={() => notify("New transaction entry opened") }><Plus size={22} /></button><button className="round-control" aria-label="Open Settings" onClick={() => navigate("settings")}><Settings size={19} /></button></>}
       />
       <div className="app-scroll home-scroll">
         <FinScoreCard onDetails={() => navigate("insights")} />
@@ -174,7 +183,7 @@ function HomeScreen({ navigate, notify }: { navigate: (screen: Screen) => void; 
           <div className="networth-value">{money("2,48,500")}</div>
           <div className="networth-trend"><span><TrendingUp size={14} /> ₹12,450 (5.28%) vs last month</span><svg viewBox="0 0 300 55" aria-hidden="true"><path d="M0 48 C25 49 28 30 55 35 S85 22 110 29 S140 10 165 20 S195 26 215 9 S250 27 270 10 S285 7 300 0" /></svg></div>
           <div className="asset-row">
-            {([[Landmark, "Bank Accounts", "2,85,000", "green"], [LineChart, "Investments", "48,500", "mint"], [WalletCards, "Cash", "12,000", "gold"], [WalletCards, "Credit Cards", "-18,500", "coral"], [CircleUserRound, "Loans", "-18,000", "coral"]] as Array<[LucideIcon, string, string, "green" | "mint" | "gold" | "coral"]>).map(([Icon, label, value, tone], index) => <button key={index} className="asset-tile" onClick={() => notify(`${label} snapshot selected`)}><MiniIcon icon={Icon} tone={tone} /><span>{label}</span><b className={String(value).startsWith("-") ? "negative" : ""}>₹{value}</b></button>)}
+            {homeAssets.map(([Icon, label, value, tone, destination], index) => <button key={index} className="asset-tile" onClick={() => navigate(destination)}><MiniIcon icon={Icon} tone={tone} /><span>{label}</span><b className={String(value).startsWith("-") ? "negative" : ""}>₹{value}</b></button>)}
           </div>
         </section>
 
@@ -206,7 +215,7 @@ function HomeScreen({ navigate, notify }: { navigate: (screen: Screen) => void; 
 function RStreakScreen({ goBack, notify }: { goBack: () => void; notify: (message: string) => void }) {
   const [goal, setGoal] = useState(250);
   const [days, setDays] = useState(0);
-  const squares = Array.from({ length: 49 }, (_, index) => index);
+  const calendarDays = Array.from({ length: 49 }, (_, index) => index < 31 ? index + 1 : null);
   return (
     <>
       <AppHeader title={<>R-Streak <span className="title-fire">🔥</span></>} onBack={goBack} right={<button className="round-control" aria-label="How streaks work"><CircleHelp size={21} /></button>} />
@@ -220,7 +229,7 @@ function RStreakScreen({ goBack, notify }: { goBack: () => void; notify: (messag
         <section className="card year-card">
           <div className="section-heading"><h2><CalendarDays size={23} /> Your Progress</h2><button className="filter-button">This Year <ChevronDown size={15} /></button></div>
           <div className="weekday-line">{["M", "T", "W", "T", "F", "S", "S"].map((day, index) => <span key={index}>{day}</span>)}</div>
-          <div className="year-grid">{squares.map((square) => <i key={square} className={square < days ? "done" : ""} />)}</div>
+          <div className="year-grid">{calendarDays.map((date, index) => <span key={index} className={`calendar-cell ${date ? "" : "empty"}`}><i className={date && date <= days ? "done" : ""} />{date ? <b>{date}</b> : null}</span>)}</div>
           <div className="heat-scale"><span>Less</span><i /><i /><i /><i /><i /><span>More</span></div>
           <div className="streak-stats"><div><b>🔥 {days} days</b><span>Current Streak</span></div><div><b>🏆 {Math.max(days, 0)} days</b><span>Longest Streak</span></div><div><b>📅 {days} days</b><span>Total Days</span></div></div>
         </section>
@@ -372,6 +381,18 @@ function FinAIScreen({ notify }: { notify: (message: string) => void }) {
   );
 }
 
+function AssetDetailScreen({ screen, goBack, notify }: { screen: AssetScreen; goBack: () => void; notify: (message: string) => void }) {
+  const detail = {
+    "bank-accounts": { title: "Bank Accounts", total: "2,85,000", icon: Landmark, tone: "green" as const, subtitle: "2 accounts connected", items: [["HDFC Bank", "Salary account", "1,75,000"], ["SBI Savings", "Primary savings", "1,10,000"]] },
+    investments: { title: "Investments", total: "48,500", icon: LineChart, tone: "mint" as const, subtitle: "Your active portfolio", items: [["Index Funds", "Long-term growth", "32,500"], ["Gold Fund", "Diversified allocation", "16,000"]] },
+    cash: { title: "Cash", total: "12,000", icon: WalletCards, tone: "gold" as const, subtitle: "Available cash balances", items: [["Wallet Cash", "Everyday spend", "7,000"], ["Emergency cash", "Quick-access reserve", "5,000"]] },
+    "credit-cards": { title: "Credit Cards", total: "-18,500", icon: WalletCards, tone: "coral" as const, subtitle: "Current outstanding balance", items: [["HDFC Regalia", "Payment due Aug 25", "12,300"], ["ICICI Coral", "Payment due Aug 28", "6,200"]] },
+    loans: { title: "Loans", total: "-18,000", icon: CircleUserRound, tone: "coral" as const, subtitle: "Upcoming loan commitments", items: [["Personal Loan", "EMI due Aug 28", "12,000"], ["Education Loan", "EMI due Sep 02", "6,000"]] },
+  }[screen];
+  const DetailIcon = detail.icon;
+  return <><AppHeader title={detail.title} subtitle={detail.subtitle} onBack={goBack} right={<button className="round-control" aria-label={`Add ${detail.title}`} onClick={() => notify(`${detail.title} connection flow opened`)}><Plus size={21} /></button>} /><div className="app-scroll asset-detail-scroll"><section className="asset-detail-hero"><MiniIcon icon={DetailIcon} tone={detail.tone} /><span><small>Total value</small><b className={detail.total.startsWith("-") ? "negative" : ""}>₹{detail.total}</b><em>{screen === "bank-accounts" ? "↑ ₹12,450 since last month" : "Updated today"}</em></span><LineChart size={37} /></section><section className="card asset-detail-list"><div className="section-heading"><div><SmallLabel>Connected accounts</SmallLabel><h2>{detail.title}</h2></div><button className="text-link" onClick={() => notify("Account manager opened")}>Manage <ChevronRight size={15} /></button></div>{detail.items.map(([name, description, amount]) => <button key={name} onClick={() => notify(`${name} details opened`)}><MiniIcon icon={DetailIcon} tone={detail.tone} /><span><b>{name}</b><small>{description}</small></span><strong>₹{amount}</strong><ChevronRight size={16} /></button>)}</section><section className="asset-detail-note"><ShieldCheck size={18} /><span><b>Your data is private and secure</b><small>Connected accounts refresh automatically when available.</small></span></section></div></>;
+}
+
 function BottomDock({ screen, navigate }: { screen: Screen; navigate: (screen: Screen) => void }) {
   const items: { id: Screen; label: string; icon: LucideIcon }[] = [
     { id: "home", label: "Home", icon: HomeIcon },
@@ -387,7 +408,7 @@ export default function Home() {
   const [location, setLocation] = useLocation();
   const screenFromPath = (pathname: string): Screen => {
     const candidate = pathname.replace(/^\//, "") as Screen;
-    return ["home", "transactions", "fin-ai", "insights", "more", "r-streak", "settings"].includes(candidate) ? candidate : "home";
+    return ["home", "transactions", "fin-ai", "insights", "more", "r-streak", "settings", ...assetScreenIds].includes(candidate) ? candidate : "home";
   };
   const screen = screenFromPath(location);
   const [previousScreen, setPreviousScreen] = useState<Screen>("home");
@@ -412,8 +433,9 @@ export default function Home() {
                 {screen === "more" && <MoreScreen navigate={navigate} notify={notify} />}
                 {screen === "settings" && <SettingsScreen goBack={goBack} darkMode={darkMode} setDarkMode={setDarkMode} notify={notify} />}
                 {screen === "fin-ai" && <FinAIScreen notify={notify} />}
+                {assetScreenIds.includes(screen as AssetScreen) && <AssetDetailScreen screen={screen as AssetScreen} goBack={goBack} notify={notify} />}
               </div>
-              {screen !== "r-streak" && screen !== "settings" ? <BottomDock screen={screen} navigate={navigate} /> : null}
+              {screen !== "r-streak" && screen !== "settings" && !assetScreenIds.includes(screen as AssetScreen) ? <BottomDock screen={screen} navigate={navigate} /> : null}
               {toast ? <div className="prototype-toast"><Check size={15} /> {toast}</div> : null}
             </div>
           </div>

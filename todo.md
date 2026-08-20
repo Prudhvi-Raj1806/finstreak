@@ -18,3 +18,7 @@
 - [x] Replace stacked transaction groups with a two-column un-categorised/categorised segment control.
 - [x] Show only the selected transaction list while preserving Sort and Filter behavior.
 - [x] Verify the segmented control at desktop and Samsung-style mobile sizes.
+- [x] Restore profile and Settings controls in the Home header.
+- [x] Add numeric day labels to the R-Streak calendar activity display.
+- [x] Add tappable Home asset cards and a Bank Accounts detail screen with return navigation.
+- [x] Verify the Home, R-Streak, and Bank Accounts detail interactions across viewports.

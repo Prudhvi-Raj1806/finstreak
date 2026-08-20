@@ -2,3 +2,6 @@
 - [x] Make the selected screen derive from the URL and preserve in-app navigation.
 - [x] Tune phone-frame dimensions and stage layout at desktop, tablet, and mobile breakpoints.
 - [x] Verify the Home, R-Streak, Transactions, Fin AI, Insights, More, and Settings screens at representative viewport sizes.
+- [x] Add a Vercel static-deployment configuration that outputs the Vite client bundle.
+- [x] Add a rewrite so direct app routes resolve to the SPA entry point.
+- [x] Validate the Vercel production build and route fallback behavior.

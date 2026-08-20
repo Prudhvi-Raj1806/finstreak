@@ -58,11 +58,11 @@ type Screen =
   | "r-streak"
   | "settings";
 
-const AI_COACH = "/manus-storage/finella-ai-coach_4d4828f7.png";
-const FOREST_TEXTURE = "/manus-storage/finella-forest-texture_64222cdd.png";
-const FIRE_ART = "/manus-storage/streak-fire-illustration_b7b9ef01.png";
-const MILESTONE_ART = "/manus-storage/milestone-landscape_a154cbfb.png";
-const SPARK_MARK = "/manus-storage/finella-spark-mark_4a3860f1.png";
+const AI_COACH = "https://files.manuscdn.com/user_upload_by_module/session_file/310519663805166564/ohgfOiQaHzMiADoL.png";
+const FOREST_TEXTURE = "https://files.manuscdn.com/user_upload_by_module/session_file/310519663805166564/CbrODAxVKcgQJvdU.png";
+const FIRE_ART = "https://files.manuscdn.com/user_upload_by_module/session_file/310519663805166564/BfXJpMvgwMMrkrmL.png";
+const MILESTONE_ART = "https://files.manuscdn.com/user_upload_by_module/session_file/310519663805166564/lqwPNhNetzTZxijC.png";
+const SPARK_MARK = "https://files.manuscdn.com/user_upload_by_module/session_file/310519663805166564/MofcSvVFATnAhInl.png";
 
 const money = (value: string) => <span className="money">₹{value}</span>;
 

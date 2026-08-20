@@ -14,4 +14,4 @@
 - [x] Add distinct un-categorised and categorised transaction sections.
 - [x] Add interactive Sort and Filter controls for the transaction list.
 - [x] Validate the updated Transactions screen at desktop and mobile sizes.
-- [ ] Build and sync the production-ready revision to the GitHub review branch.
+- [x] Build and sync the production-ready revision to the GitHub review branch.

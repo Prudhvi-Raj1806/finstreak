@@ -3,7 +3,7 @@
  * This page stages a warm-white, emerald-led personal-finance app in a device-only Samsung-style emulator.
  * Preserve compact editorial grouping, clear financial hierarchy, soft elevation, and a tall 19.5:9 screen rhythm.
  */
-import { useState } from "react";
+import { useRef, useState } from "react";
 import { useLocation } from "wouter";
 import {
   ArrowDownLeft,
@@ -595,12 +595,19 @@ export default function Home() {
     return supported.includes(candidate) ? candidate : "home";
   };
   const screen = screenFromPath(location);
-  const [previousScreen, setPreviousScreen] = useState<Screen>("home");
+  const backStack = useRef<Screen[]>([]);
   const [toast, setToast] = useState<string | null>(null);
   const [darkMode, setDarkMode] = useState(false);
   const [showGlobalAdd, setShowGlobalAdd] = useState(false);
-  const navigate = (next: Screen) => { if (next !== screen) setPreviousScreen(screen); setLocation(next === "home" ? "/" : `/${next}`); };
-  const goBack = () => navigate(previousScreen);
+  const navigate = (next: Screen) => {
+    if (next === screen) return;
+    backStack.current = [...backStack.current, screen];
+    setLocation(next === "home" ? "/" : `/${next}`);
+  };
+  const goBack = () => {
+    const destination = backStack.current.pop() ?? "home";
+    setLocation(destination === "home" ? "/" : `/${destination}`);
+  };
   const notify = (message: string) => { setToast(message); window.setTimeout(() => setToast(null), 2300); };
   return (
     <main className={`prototype-stage ${darkMode ? "phone-dark" : ""}`}>

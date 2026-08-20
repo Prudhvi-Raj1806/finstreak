@@ -31,3 +31,6 @@
 - [x] Build the missing screens and connect all documented navigation, modal, dropdown, and management flows.
 - [x] Confirm numeric dates render in both Home and R-Streak activity views.
 - [x] Validate every in-app control through a complete desktop and mobile interaction pass.
+- [x] Reproduce the reported back-navigation loop across primary and nested Finella screens.
+- [x] Replace history-dependent in-phone back behavior with deterministic screen return behavior.
+- [x] Verify corrected back navigation on representative desktop and Samsung-style mobile flows.

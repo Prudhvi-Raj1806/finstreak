@@ -39,3 +39,8 @@
 - [x] Audit and correct inconsistent in-phone spacing, card rhythm, header alignment, and control density.
 - [x] Define CEO and CFO Insights modes with distinct role-specific language, metrics, priorities, and actions.
 - [x] Implement the CEO/CFO mode switch and validate the refined UI at desktop and Samsung-style mobile viewports.
+- [x] Confirm the latest checkpoint commit is present on the requested GitHub review branch.
+- [x] Verify the Vercel-ready configuration and provide the correct publishing handoff.
+- [x] Map every existing screen into a visible CEO or CFO operating workflow without removing the underlying functionality.
+- [x] Rebuild role navigation, labels, and section entry points so Budgets, Goals, Reports, Reconciliation, and supporting tools are clearly discoverable.
+- [x] Add premium runway, burn-rate, and cash-control metrics to Transactions and validate the executive experience across viewports.

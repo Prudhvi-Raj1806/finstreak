@@ -36,3 +36,6 @@
 - [x] Verify corrected back navigation on representative desktop and Samsung-style mobile flows.
 - [x] Locate and remove the Home-screen nested-button hierarchy reported by React.
 - [x] Validate that the DOM-nesting warning is absent after the accessibility-safe refactor.
+- [x] Audit and correct inconsistent in-phone spacing, card rhythm, header alignment, and control density.
+- [x] Define CEO and CFO Insights modes with distinct role-specific language, metrics, priorities, and actions.
+- [x] Implement the CEO/CFO mode switch and validate the refined UI at desktop and Samsung-style mobile viewports.
